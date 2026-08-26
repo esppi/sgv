@@ -29,8 +29,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.7 }}
           className="mt-8 text-lg md:text-xl text-sgv-grey font-sans max-w-2xl mx-auto"
         >
-          Backing the founders bridging mainstream adoption — and the AI
-          infrastructure they build on.
+          Backing the founders bridging mainstream adoption.
         </motion.p>
       </div>
 

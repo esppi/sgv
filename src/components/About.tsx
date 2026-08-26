@@ -25,7 +25,7 @@ export default function About() {
           <p>
             AI is the second half of that thesis. As models commoditize, value is shifting to two
             places: applications that own the user relationship, and the infrastructure everything
-            else is built on — agents, data, compute, and payment rails. We invest in both.
+            else is built on, from agents and data to compute and payment rails. We invest in both.
           </p>
           <p>
             Our portfolio spans consumer and middleware companies in consumer DeFi, social, casual

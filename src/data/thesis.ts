@@ -22,7 +22,7 @@ export const thesisAreas: ThesisArea[] = [
   },
   {
     title: "AI Infrastructure",
-    summary: "The rails AI applications run on — agent tooling, data, compute, and payments.",
+    summary: "The rails AI applications run on: agent tooling, data, compute, and payments.",
     subFocusAreas: ["Agent Infrastructure", "Data Marketplaces", "Inference & Compute", "Agentic Payments"],
   },
   {
