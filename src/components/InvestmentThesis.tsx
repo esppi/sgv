@@ -10,7 +10,11 @@ export default function InvestmentThesis() {
 
       <Accordion type="multiple" className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
         {thesisAreas.map((area, i) => (
-          <AccordionItem key={i} value={`thesis-${i}`}>
+          <AccordionItem
+            key={i}
+            value={`thesis-${i}`}
+            className={thesisAreas.length % 2 === 1 && i === thesisAreas.length - 1 ? "md:col-span-2" : undefined}
+          >
             <AccordionTrigger className="text-xl font-serif">
               {area.title}
             </AccordionTrigger>

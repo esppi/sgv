@@ -9,15 +9,15 @@ const valueProps = [
   },
   {
     number: "02",
-    title: "Crypto-Native",
+    title: "Crypto & AI Native",
     description:
-      "We are not tourists. Every member of SGV is an active user of the products and protocols in our ecosystem. We use the wallets, trade on the DEXs, post on the social apps, and play the games. This gives us conviction and pattern recognition that outsiders simply don't have.",
+      "We are not tourists. Every member of SGV is an active user of the products and protocols in our ecosystem. We use the wallets, trade on the DEXs, post on the social apps, play the games, and build with the AI agents and tools we invest in. This gives us conviction and pattern recognition that outsiders simply don't have.",
   },
   {
     number: "03",
     title: "Upscale Capital",
     description:
-      "We are deeply connected to the largest and most respected VCs in the crypto space. When our portfolio companies are ready for their next round, we open doors to Tier 1 funds and help founders navigate the fundraising process with warm introductions and strategic positioning.",
+      "We are deeply connected to the largest and most respected early-stage VCs in crypto and AI. When our portfolio companies are ready for their next round, we open doors to Tier 1 funds and help founders navigate the fundraising process with warm introductions and strategic positioning.",
   },
 ];
 

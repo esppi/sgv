@@ -70,7 +70,7 @@ export default function PortfolioPage() {
               Our Investments
             </h1>
             <p className="text-sgv-grey font-sans mb-10 max-w-xl">
-              Companies building at the frontier of social, identity, and community infrastructure.
+              Early-stage companies across consumer crypto, AI applications, and AI infrastructure.
             </p>
           </motion.div>
 

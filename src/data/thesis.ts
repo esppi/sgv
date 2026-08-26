@@ -16,9 +16,14 @@ export const thesisAreas: ThesisArea[] = [
     subFocusAreas: ["Lending & Borrowing", "Decentralized Exchanges", "Stablecoins", "Real World Assets"],
   },
   {
-    title: "AI x Crypto",
-    summary: "The convergence of artificial intelligence and blockchain creating new paradigms for decentralized computation.",
-    subFocusAreas: ["Data Marketplaces", "AI Agents", "Companions", "Vibecoding", "Simulations"],
+    title: "AI Applications",
+    summary: "Consumer AI products that own the user relationship and cross into the mainstream.",
+    subFocusAreas: ["AI Agents", "Companions", "Vibecoding", "Creative Tools", "Simulations"],
+  },
+  {
+    title: "AI Infrastructure",
+    summary: "The rails AI applications run on — agent tooling, data, compute, and payments.",
+    subFocusAreas: ["Agent Infrastructure", "Data Marketplaces", "Inference & Compute", "Agentic Payments"],
   },
   {
     title: "Growth & Entertainment",

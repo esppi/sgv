@@ -11,7 +11,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="inline-block text-xs uppercase tracking-[0.3em] text-sgv-green font-sans mb-8"
         >
-          Early Stage Crypto
+          Early Stage Crypto &amp; AI
         </motion.span>
 
         <motion.h1
@@ -20,7 +20,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-serif font-medium leading-[1.1] tracking-tight"
         >
-          Investing in the best consumer crypto apps
+          Investing in the best consumer crypto and AI apps
         </motion.h1>
 
         <motion.p
@@ -29,7 +29,8 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.7 }}
           className="mt-8 text-lg md:text-xl text-sgv-grey font-sans max-w-2xl mx-auto"
         >
-          Backing the founders bridging mainstream adoption.
+          Backing the founders bridging mainstream adoption — and the AI
+          infrastructure they build on.
         </motion.p>
       </div>
 
