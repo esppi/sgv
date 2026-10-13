@@ -38,7 +38,7 @@ const raw: PortfolioCompany[] = [
   { id: 22, name: "Poof", tldr: "Vibecode Solana Apps", team: "Amit and Bilal", dateInvested: "2025Q3", date: "2025-07-15", link: "https://poof.new/", status: "Active", priority: 7 },
   { id: 23, name: "Sperm Racing", tldr: "Mens health and longevity", team: "Eric and Nick", dateInvested: "2025Q3", date: "2025-07-15", link: "https://www.spermracing.com/", status: "Active" },
   { id: 24, name: "FXHash", tldr: "Web3 art", team: "Ciphrd and Paul", dateInvested: "2025Q3", date: "2025-08-28", link: "https://www.fxhash.xyz/", status: "Shutdown" },
-  { id: 25, name: "Pandemic Labs", tldr: "Viral onchain games", team: "Tuna", dateInvested: "2025Q4", date: "2025-10-22", link: "https://www.pndm.org/", status: "Exited" },
+  { id: 25, name: "Pandemic Labs", tldr: "Viral onchain games", team: "Tuna", dateInvested: "2025Q4", date: "2025-10-22", link: "https://www.pndm.org/", status: "Shutdown" },
   { id: 26, name: "Firefly", tldr: "Web3 everything app", team: "Suji", dateInvested: "2025Q4", date: "2025-12-05", link: "https://firefly.social/following/posts", status: "Active" },
   { id: 27, name: "Giggles", tldr: "Trade trends", team: "Justin", dateInvested: "2025Q4", date: "2025-11-13", link: "https://www.googlegiggles.com/", status: "Active" },
   { id: 28, name: "Offramp", tldr: "Web3 Neobank", team: "Luc", dateInvested: "2025Q4", date: "2025-11-27", link: "https://offramp.xyz/", status: "Active" },
