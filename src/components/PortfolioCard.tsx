@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { PortfolioCompany } from "@/data/portfolio";
-import { formatQuarter, getLogoDomain } from "@/data/portfolio";
+import { formatQuarter, formatStatus, getLogoDomain } from "@/data/portfolio";
 import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -12,14 +12,17 @@ interface PortfolioCardProps {
 
 const statusStyles: Record<string, string> = {
   Active: "bg-sgv-green/10 text-sgv-green",
-  Acquired: "bg-sgv-blue/20 text-sgv-blue",
-  Divested: "bg-sgv-grey/15 text-sgv-grey",
+  Exited: "bg-sgv-blue/20 text-sgv-blue",
+  Shutdown: "bg-sgv-grey/15 text-sgv-grey",
 };
 
 export default function PortfolioCard({ company, index, total }: PortfolioCardProps) {
-  const Wrapper = company.link ? "a" : "div";
-  const linkProps = company.link
-    ? { href: company.link, target: "_blank" as const, rel: "noopener noreferrer" }
+  // Shut down companies render greyed out and are not clickable
+  const inactive = company.status === "Shutdown";
+  const href = inactive ? "" : company.link;
+  const Wrapper = href ? "a" : "div";
+  const linkProps = href
+    ? { href, target: "_blank" as const, rel: "noopener noreferrer" }
     : {};
 
   const domain = getLogoDomain(company);
@@ -30,8 +33,8 @@ export default function PortfolioCard({ company, index, total }: PortfolioCardPr
       {...linkProps}
       className={cn(
         "flex-shrink-0 w-72 md:w-80 bg-sgv-mirage/50 border border-sgv-mirage rounded-2xl p-6",
-        "group hover:border-sgv-green/30 transition-all duration-300",
-        company.link && "cursor-pointer"
+        inactive ? "opacity-40 grayscale" : "group hover:border-sgv-green/30 transition-all duration-300",
+        href && "cursor-pointer"
       )}
     >
       {/* Header: index + status */}
@@ -41,11 +44,11 @@ export default function PortfolioCard({ company, index, total }: PortfolioCardPr
         </span>
         <span
           className={cn(
-            "text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full font-sans font-medium",
+            "text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full font-sans font-medium whitespace-nowrap",
             statusStyles[company.status] ?? statusStyles.Active
           )}
         >
-          {company.status}
+          {formatStatus(company.status)}
         </span>
       </div>
 
@@ -71,7 +74,7 @@ export default function PortfolioCard({ company, index, total }: PortfolioCardPr
         <h3 className="text-lg font-serif font-medium text-sgv-white group-hover:text-sgv-green transition-colors truncate">
           {company.name}
         </h3>
-        {company.link && (
+        {href && (
           <ExternalLink className="w-3.5 h-3.5 text-sgv-grey/40 group-hover:text-sgv-green/60 transition-colors flex-shrink-0" />
         )}
       </div>
@@ -81,11 +84,8 @@ export default function PortfolioCard({ company, index, total }: PortfolioCardPr
         {company.tldr}
       </p>
 
-      {/* Meta row: team + quarter */}
-      <div className="flex items-center justify-between pt-4 border-t border-sgv-mirage">
-        <span className="text-xs text-sgv-grey/70 font-sans truncate mr-3" title={company.team}>
-          {company.team}
-        </span>
+      {/* Meta row: quarter */}
+      <div className="flex items-center justify-end pt-4 border-t border-sgv-mirage">
         <span className="text-xs text-sgv-grey/50 font-sans whitespace-nowrap">
           {formatQuarter(company.dateInvested)}
         </span>
