@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import MobiusStrip from "@/components/MobiusStrip";
-import { portfolioCompanies, formatQuarter, getLogoDomain } from "@/data/portfolio";
+import { portfolioCompanies, formatQuarter, formatStatus, getLogoDomain } from "@/data/portfolio";
 import { cn } from "@/lib/utils";
 
 const statusStyles: Record<string, string> = {
   Active: "bg-sgv-green/10 text-sgv-green",
-  Acquired: "bg-sgv-blue/20 text-sgv-blue",
-  Divested: "bg-sgv-grey/15 text-sgv-grey",
+  Exited: "bg-sgv-blue/20 text-sgv-blue",
+  Shutdown: "bg-sgv-grey/15 text-sgv-grey",
 };
 
 function CompanyLogo({ name, domain }: { name: string; domain: string | null }) {
@@ -77,9 +77,12 @@ export default function PortfolioPage() {
           {/* Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {portfolioCompanies.map((company, i) => {
-              const Wrapper = company.link ? "a" : "div";
-              const linkProps = company.link
-                ? { href: company.link, target: "_blank" as const, rel: "noopener noreferrer" }
+              // Shut down companies render greyed out and are not clickable
+              const inactive = company.status === "Shutdown";
+              const href = inactive ? "" : company.link;
+              const Wrapper = href ? "a" : "div";
+              const linkProps = href
+                ? { href, target: "_blank" as const, rel: "noopener noreferrer" }
                 : {};
               const domain = getLogoDomain(company);
 
@@ -94,8 +97,8 @@ export default function PortfolioPage() {
                     {...linkProps}
                     className={cn(
                       "block bg-sgv-mirage/50 border border-sgv-mirage rounded-xl p-6",
-                      "group hover:border-sgv-green/30 transition-all duration-300",
-                      company.link && "cursor-pointer"
+                      inactive ? "opacity-40 grayscale" : "group hover:border-sgv-green/30 transition-all duration-300",
+                      href && "cursor-pointer"
                     )}
                   >
                     <div className="flex items-start gap-4">
@@ -110,7 +113,7 @@ export default function PortfolioPage() {
                           <h3 className="text-lg font-serif font-medium text-sgv-white group-hover:text-sgv-green transition-colors truncate">
                             {company.name}
                           </h3>
-                          {company.link && (
+                          {href && (
                             <ExternalLink className="w-3.5 h-3.5 text-sgv-grey/40 group-hover:text-sgv-green/60 transition-colors flex-shrink-0" />
                           )}
                         </div>
@@ -124,11 +127,11 @@ export default function PortfolioPage() {
                         <div className="flex items-center gap-3">
                           <span
                             className={cn(
-                              "text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full font-sans font-medium",
+                              "text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full font-sans font-medium whitespace-nowrap",
                               statusStyles[company.status] ?? statusStyles.Active
                             )}
                           >
-                            {company.status}
+                            {formatStatus(company.status)}
                           </span>
                           <span className="text-xs text-sgv-grey/50 font-sans">
                             {formatQuarter(company.dateInvested)}
