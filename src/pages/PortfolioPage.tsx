@@ -136,9 +136,6 @@ export default function PortfolioPage() {
                           <span className="text-xs text-sgv-grey/50 font-sans">
                             {formatQuarter(company.dateInvested)}
                           </span>
-                          <span className="text-xs text-sgv-grey/50 font-sans truncate" title={company.team}>
-                            {company.team}
-                          </span>
                         </div>
                       </div>
                     </div>

@@ -84,11 +84,8 @@ export default function PortfolioCard({ company, index, total }: PortfolioCardPr
         {company.tldr}
       </p>
 
-      {/* Meta row: team + quarter */}
-      <div className="flex items-center justify-between pt-4 border-t border-sgv-mirage">
-        <span className="text-xs text-sgv-grey/70 font-sans truncate mr-3" title={company.team}>
-          {company.team}
-        </span>
+      {/* Meta row: quarter */}
+      <div className="flex items-center justify-end pt-4 border-t border-sgv-mirage">
         <span className="text-xs text-sgv-grey/50 font-sans whitespace-nowrap">
           {formatQuarter(company.dateInvested)}
         </span>
