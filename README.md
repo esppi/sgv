@@ -1,73 +1,109 @@
-# React + TypeScript + Vite
+# Social Graph Ventures (SGV) Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The official website for Social Graph Ventures, a consumer crypto and AI venture fund.
 
-Currently, two official plugins are available:
+**Live site:** Deployed on Vercel
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## What is SGV?
 
-## React Compiler
+Social Graph Ventures is a VC fund focused on consumer crypto and AI applications. The fund invests in early-stage startups building:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Social Protocols** - Decentralized identity, social graphs, creator economies
+- **DeFi for the Masses** - Consumer DeFi, lending, DEXs, stablecoins, RWA
+- **AI Applications** - AI agents, companions, vibecoding, creative tools
+- **AI Infrastructure** - Agent tooling, data, compute, agentic payments
+- **Growth & Entertainment** - Prediction markets, livestreaming, UGC marketing
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React 19** + TypeScript
+- **Vite** - Build tool and dev server
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animations
+- **React Three Fiber** - 3D graphics (Mobius strip background)
+- **Vercel** - Deployment
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prerequisites
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 18+
+- npm or yarn
+
+### Installation
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+Opens at `http://localhost:5173`
+
+### Build
+
+```bash
+npm run build
+```
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+### Lint
+
+```bash
+npm run lint
+```
+
+## Project Structure
+
+```
+src/
+  components/       # React components
+    ui/             # Reusable UI primitives (button, accordion)
+    Hero.tsx        # Hero section
+    Navbar.tsx      # Navigation
+    PortfolioCarousel.tsx
+    Team.tsx
+    ...
+  data/             # Static data
+    portfolio.ts    # Portfolio companies (33 investments)
+    team.ts         # Team and LPs
+    thesis.ts       # Investment thesis areas
+    approach.ts     # Fund approach
+    metrics.ts      # Impact metrics
+  hooks/            # Custom React hooks
+  pages/            # Page components
+    LandingPage.tsx
+    PortfolioPage.tsx
+    WritingPage.tsx
+  lib/              # Utilities
+public/             # Static assets
+api/                # Vercel serverless functions
+```
+
+## Pages
+
+| Route | Description |
+|-------|-------------|
+| `/` | Landing page with all sections |
+| `/portfolio` | Full portfolio company list |
+| `/writing` | Blog posts from Substack |
+
+## Team
+
+**Cofounders:**
+- Jakub
+- Morning Mist
+- Brock (Analyst)
+
+## License
+
+Private repository.
