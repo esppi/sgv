@@ -1,0 +1,361 @@
+<title>Abstract Ventures Fund Model</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single 1040px reading column; memo header, KPI strip, then one chart per section with a short read-out. */
+:root{
+  --bg:#fbfcfd; --surface:#ffffff; --ink:#14171c; --ink-2:#4a505a; --muted:#7a818c;
+  --rule:#e3e6ea; --grid:#eef0f3; --accent:#1c5cab; --tint:#eef4fc;
+  --spv:#9aa0a8; --f1:#2a78d6; --f2:#eb6834; --f3:#1baf7a; --f4:#eda100;
+  --good:#0a7f0a; --warn-bg:#fff6e0; --warn-ink:#7a5200;
+  --display:"Newsreader", Georgia, "Times New Roman", serif;
+  --body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#121417; --surface:#1a1d21; --ink:#eef0f2; --ink-2:#b9bec6; --muted:#8a919b;
+  --rule:#2c3036; --grid:#23272c; --accent:#86b6ef; --tint:#1b2633;
+  --spv:#6d737c; --f1:#3987e5; --f2:#d95926; --f3:#199e70; --f4:#c98500;
+  --good:#3fbf3f; --warn-bg:#2e2512; --warn-ink:#f2c76b; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#121417; --surface:#1a1d21; --ink:#eef0f2; --ink-2:#b9bec6; --muted:#8a919b;
+  --rule:#2c3036; --grid:#23272c; --accent:#86b6ef; --tint:#1b2633;
+  --spv:#6d737c; --f1:#3987e5; --f2:#d95926; --f3:#199e70; --f4:#c98500;
+  --good:#3fbf3f; --warn-bg:#2e2512; --warn-ink:#f2c76b; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:32px 64px}
+.wrap{max-width:1040px;margin:0 auto;display:grid;gap:48px}
+header{display:grid;gap:12px;border-bottom:1px solid var(--rule);padding-bottom:28px}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font:600 clamp(32px,5vw,50px)/1.05 var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font:600 clamp(22px,3vw,28px)/1.2 var(--display);margin:0;text-wrap:balance}
+h3{font:600 15px/1.3 var(--body);margin:0}
+p{margin:0;max-width:68ch;color:var(--ink-2)}
+.lede{font-size:18px;color:var(--ink)}
+.legend-key{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--ink-2)}
+.legend-key span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.tag{display:inline-block;font:500 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:4px;vertical-align:middle}
+.tag.rep{background:var(--tint);color:var(--accent)}
+.tag.mod{background:var(--warn-bg);color:var(--warn-ink)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.kpi{background:var(--surface);padding:16px 18px;display:grid;gap:4px;align-content:start}
+.kpi b{font:600 clamp(24px,3.4vw,32px)/1.1 var(--display);font-variant-numeric:tabular-nums}
+.kpi small{font-size:13px;color:var(--muted);line-height:1.35}
+section{display:grid;gap:16px}
+.sec-head{display:grid;gap:8px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:24px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:18px;display:grid;gap:12px;min-width:0}
+.chart{width:100%;overflow-x:auto}
+.chart svg{display:block;width:100%;height:auto;min-width:0}
+svg text{font-family:var(--body);fill:var(--ink-2)}
+svg .num{font-family:var(--mono);fill:var(--ink)}
+svg .ax{font-size:11px;fill:var(--muted)}
+.note{font-size:13px;color:var(--muted);max-width:none}
+.tbl{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:900px;font-size:14px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 11px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface);position:sticky;top:0}
+td.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.co{font-weight:600}
+.co small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.fund-pill{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.conf{font:500 11px/1 var(--mono);padding:3px 6px;border-radius:4px;border:1px solid var(--rule);white-space:nowrap}
+.lens{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.lens .card p{font-size:15px}
+.lens .who{font:500 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.src{font-size:13px;color:var(--ink-2);columns:2 320px;column-gap:32px;padding-left:18px;margin:0}
+.src li{margin-bottom:6px;break-inside:avoid}
+a{color:var(--accent)}
+.method{background:var(--warn-bg);color:var(--warn-ink);border-radius:10px;padding:14px 16px;font-size:14px;line-height:1.5}
+.method b{color:var(--warn-ink)}
+#tip{position:fixed;pointer-events:none;z-index:20;background:var(--ink);color:var(--bg);font:13px/1.4 var(--body);padding:8px 10px;border-radius:6px;max-width:260px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+#tip b{font-weight:600}
+.hit{cursor:default}
+.hit:focus{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: no-preference){ .bar{transition:opacity .15s} }
+.dim .bar{opacity:.35}
+.dim .bar.on{opacity:1}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Social Graph Ventures · GP study · Nov 2026</div>
+  <h1>Abstract Ventures: fund-by-fund model</h1>
+  <p class="lede">Ramtin Naimi's firm went from per-deal SPVs (2016–18) to a $500M fourth fund. The model says one decision made the firm: putting about 15% of the 2023 fund into xAI's formation round. Since the SpaceX IPO, that one position is worth about 2x the whole fund on paper.</p>
+  <div class="legend-key" aria-label="Fund colors">
+    <span><i class="sw" style="background:var(--spv)"></i>SPV era 2016–18</span>
+    <span><i class="sw" style="background:var(--f1)"></i>Fund I · 2018</span>
+    <span><i class="sw" style="background:var(--f2)"></i>Fund II · 2021</span>
+    <span><i class="sw" style="background:var(--f3)"></i>Fund III · 2023</span>
+    <span><i class="sw" style="background:var(--f4)"></i>Fund IV · 2025</span>
+  </div>
+  <div class="method"><b>How to read this.</b> Abstract does not publish check sizes, ownership, lead status by fund, or fund returns. Figures tagged <span class="tag rep">Reported</span> come from public sources (listed at the bottom). Figures tagged <span class="tag mod">Model</span> are my estimates, built from round sizes, valuations, typical seed dilution and fund-construction math. Use them to frame diligence questions, not as fact.</div>
+</header>
+
+<div class="kpis" role="list">
+  <div class="kpi" role="listitem"><span class="eyebrow">AUM</span><b>~$1.8B</b><small>Reported (Colossus, Seedlist, F4). Crunchbase lists $1.5B.</small></div>
+  <div class="kpi" role="listitem"><span class="eyebrow">Fund commitments I–IV</span><b>$1.17B</b><small>$100M · $270M · $300M · $500M</small></div>
+  <div class="kpi" role="listitem"><span class="eyebrow">Investments logged</span><b>~389</b><small>Crunchbase hub. 197 tagged "lead" (51%).</small></div>
+  <div class="kpi" role="listitem"><span class="eyebrow">Unicorns</span><b>15</b><small>Dealroom (2 decacorns). Tracxn counts 7–10.</small></div>
+  <div class="kpi" role="listitem"><span class="eyebrow">Midas List 2026</span><b>#68</b><small>Forbes. Notable deals cited: xAI, Polymarket, Solana.</small></div>
+</div>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">01 · Fund sizes by vintage <span class="tag rep">Reported</span></div>
+    <h2>Fund size grew 5x in seven years, from $100M to $500M</h2>
+    <p>Before Fund I, Naimi did every deal as its own SPV. SEC Form Ds for the "Abstract Ventures Special Opportunities" series show raises of $58K–$433K each. Those SPVs have returned just under $100M to investors. An $800M fifth fund has been reported once but is not confirmed, so it is drawn as an outline.</p>
+  </div>
+  <div class="card"><div class="chart" id="c-funds"></div></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">02 · Per-fund return model <span class="tag mod">Model</span></div>
+    <h2>Fund III is the standout: a modeled ~3.6x gross TVPI after three years</h2>
+    <p>Each bar runs from the bear case to the bull case, and the dot is the base case. The tick shows an approximate top-quartile TVPI for that vintage (Carta and Cambridge ranges, gross). Fund III's base case matches the one published performance figure: Colossus reported 59% annualized over three years, which compounds to about 4.0x.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Gross TVPI by fund: bear, base, bull</h3><div class="chart" id="c-tvpi"></div></div>
+    <div class="card"><h3>Modeled value by fund ($M, base case)</h3><div class="chart" id="c-value"></div><p class="note">Value = fund size × base TVPI. Fund III's value is mostly the xAI/SpaceX stake.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">03 · Check sizes and lead vs follow <span class="tag mod">Model</span> with reported anchors</div>
+    <h2>Average initial checks grew about 15x, and Abstract now leads more than half its rounds</h2>
+    <p>The ranges are modeled from fund size, a company count per fund and a reserve ratio. The anchors are reported: the 2017 TechCrunch range of $250–750K, Form D sizes for the SPVs, roughly $45M into xAI, and the 2025–26 seeds Abstract led (Applied Labs $4.2M, Era $11M, Blackstar $12M).</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Initial check range per company ($M)</h3><div class="chart" id="c-checks"></div><p class="note">The xAI check (~$45M, about 15% of Fund III, one secondary source) is off this scale and is labeled separately.</p></div>
+    <div class="card"><h3>Led vs followed, share of new deals</h3><div class="chart" id="c-lead"></div><p class="note">Crunchbase tags 197 of 389 deals as led (51%), which likely counts co-leads. A second Crunchbase page shows 59 of 417 (14%). The by-fund split is modeled.</p></div>
+  </div>
+  <div class="tbl"><table id="t-funds"></table></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">04 · Top 10 positions <span class="tag mod">Model</span></div>
+    <h2>Only one position returns its fund: xAI, now held through SpaceX</h2>
+    <p>Positions are ranked by modeled current value: check × markup. Markup is the change in valuation since entry, cut by estimated dilution. "× fund" is that value divided by the fund that holds it, which is the number a GP is underwritten on. Confidence reflects how well Abstract's participation and entry are documented.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Gross markup since entry (log scale)</h3><div class="chart" id="c-markup"></div></div>
+    <div class="card"><h3>Position value as a multiple of its fund</h3><div class="chart" id="c-mof"></div><p class="note">SPV-era positions belong to deal-by-deal LPs, not a fund. They are listed in the table but left off this chart.</p></div>
+  </div>
+  <div class="tbl"><table id="t-top"></table></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">05 · How the great investors would read it</div>
+    <h2>Abstract is effectively a concentrated access fund with a seed program attached</h2>
+  </div>
+  <div class="lens">
+    <div class="card"><div class="who">Thiel · power law</div><p>One position, xAI, is modeled at about 1.95x Fund III. Cognition and Polymarket add about 0.6x more. Fund III is a power-law fund that depends on very few names. The question for diligence is whether that can repeat, or whether it was a single access event.</p></div>
+    <div class="card"><div class="who">Druckenmiller · sizing</div><p>Fifteen percent of a seed fund in one formation round is hedge-fund sizing: be right, then be big. Most seed managers cap any one position at 3–5%. Naimi's edge looks like a willingness to concentrate when he has access, more than picking at seed.</p></div>
+    <div class="card"><div class="who">Buffett · cash, not marks</div><p>Through 2026 the returns are mostly unrealized. SpaceX listed on June 12, 2026, so a standard 180-day lock-up ends around December 9. That makes early 2027 the moment Fund III can turn paper TVPI into real DPI. Ask whether they distribute in kind or sell.</p></div>
+    <div class="card"><div class="who">Valentine · the next fund's math</div><p>For 3x gross, a $500M Fund IV must return $1.5B. At a modeled ~8% entry ownership, diluted to ~4% at exit, it needs about $37B of combined exit value. Fund IV is buying that with $11–12M led seeds into AI hardware, a different bet from Fund III.</p></div>
+    <div class="card"><div class="who">Munger · invert</div><p>What breaks it: the access deals (xAI, SpaceX) are priced off one founder's story, and the 2021 vintage (Fund II) is modeled near benchmark. Remove xAI and Fund III drops to about 1.6x, which is good but not elite.</p></div>
+    <div class="card"><div class="who">For SGV</div><p>Two lessons transfer to a fund of our size. Leading seeds (51% by Crunchbase) built the brand that won the allocation. Then sizing up hard in one rare access round made the fund. Plan reserves for one 10–15% concentrated position per fund, decided in advance.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><div class="eyebrow">Sources</div></div>
+  <ol class="src">
+    <li><a href="https://colossus.com/article/ramtin-naimi-man-hot-hand/" target="_blank" rel="noopener">Colossus: The Man With the Hot Hand</a> (fund sizes; 59% annualized over three years; SPVs returned ~$100M)</li>
+    <li><a href="https://seedlist.com/firms/abstract-ventures.html" target="_blank" rel="noopener">Seedlist: Abstract Ventures</a> (Funds I–IV; Wise, Rippling, Solana; Cognition entry)</li>
+    <li><a href="https://www.startuphub.ai/ai-news/technology/2026/the-hidden-capital-crunch-behind-silicon-valley-s-ai-boom-recap-every-talk-and-launch-explained" target="_blank" rel="noopener">StartupHub: ~15% of the 2023 fund into xAI; $800M fund (unconfirmed)</a></li>
+    <li><a href="https://www.forbes.com/profile/ramtin-naimi/" target="_blank" rel="noopener">Forbes: Ramtin Naimi, Midas #68</a> (xAI at $250B in the SpaceX merger; Polymarket)</li>
+    <li><a href="https://dealroom.co/investors/abstract-ventures/" target="_blank" rel="noopener">Dealroom: Abstract Ventures</a> (Ripple $40B, Rippling $16.8B, Atoms $6.8B, NewLimit $3.1B, Clay $3.1B; 15 unicorns)</li>
+    <li><a href="https://www.crunchbase.com/hub/abstract-ventures-portfolio-companies" target="_blank" rel="noopener">Crunchbase hub</a> (389 investments, 197 led)</li>
+    <li><a href="https://techcrunch.com/2017/04/05/at-ramtin-naimis-abstract-ventures-early-stage-investing-and-philanthropy-go-hand-in-hand" target="_blank" rel="noopener">TechCrunch 2017</a> (SPV per deal; $250–750K seed checks)</li>
+    <li><a href="https://formds.com/issuers/a-snv-25-fund-a-series-of-abstract-ventures-special-opportunities-llc" target="_blank" rel="noopener">Form D: Abstract Ventures Special Opportunities series</a></li>
+    <li><a href="https://www.startuphub.ai/news/abstract-ventures-and-vercels-ceo-back-ai-agent-builder-applied-labs-with-4-2m" target="_blank" rel="noopener">StartupHub: Applied Labs $4.2M seed, led by Abstract</a></li>
+    <li><a href="https://f4.fund/firms/abstract-ventures" target="_blank" rel="noopener">F4: Era $11M and Blackstar $12M seeds, led by Abstract</a></li>
+    <li><a href="https://messari.io/organization/abstract-ventures" target="_blank" rel="noopener">Messari</a> and <a href="https://forgeglobal.com/polymarket_ipo/" target="_blank" rel="noopener">Forge</a>: Polymarket entry at $350M post</li>
+    <li><a href="https://siliconvalleyinvestclub.com/investors/abstract-ventures/" target="_blank" rel="noopener">SV Investclub</a> (Cognition $48B, Polymarket $15B, current marks)</li>
+    <li><a href="https://www.fool.com/investing/2026/03/31/spacex-absorbed-xai-at-a-combined-125-trillion-val/" target="_blank" rel="noopener">Motley Fool: SpaceX + xAI at $1.25T combined</a>; <a href="https://aiweekly.co/node/2850" target="_blank" rel="noopener">AI Weekly: SpaceX IPO at $1.75T</a></li>
+    <li><a href="https://www.bloomberg.com/news/articles/2023-12-05/elon-musk-s-xai-startup-seeks-to-raise-1-billion-in-equity" target="_blank" rel="noopener">Bloomberg: xAI Form D, $134.7M first raise, Nov 2023</a></li>
+    <li><a href="https://x.com/bahram_t/status/2042071776507916487" target="_blank" rel="noopener">Post on Iranian-American investors</a> (Solana at $0.04; Clay)</li>
+  </ol>
+  <p class="note">Model assumptions: xAI entry valuation ~$18B (undisclosed; between the reported Dec-2023 target and the May-2024 $24B post), xAI's implied value at the SpaceX IPO ≈ $250B × (1.75T / 1.25T) = $350B, and retention after dilution of 0.35–0.95 depending on entry stage. Solana uses a $150/SOL reference price. Abstract's position size there is unknown and may be partly realized, so no value is assigned. Benchmarks are approximate gross top-quartile TVPI by vintage.</p>
+</section>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+const FUNDS=[
+ {id:"spv",name:"SPV era",yr:"2016–18",size:null,sizeNote:"Deal-by-deal SPVs, $0.06–0.43M each (Form D)",cos:40,chkLo:0.06,chkHi:0.45,chkAvg:0.25,reserve:0,lead:0.03,tvpi:null,bench:null},
+ {id:"f1",name:"Fund I",yr:"2018",size:100,cos:70,chkLo:0.25,chkHi:1.5,chkAvg:0.8,reserve:0.40,lead:0.12,tvpi:[1.6,2.4,3.5],bench:2.4},
+ {id:"f2",name:"Fund II",yr:"2021",size:270,cos:90,chkLo:1,chkHi:4,chkAvg:2.0,reserve:0.35,lead:0.30,tvpi:[0.9,1.4,2.2],bench:1.4},
+ {id:"f3",name:"Fund III",yr:"2023",size:300,cos:45,chkLo:1,chkHi:5,chkAvg:2.5,reserve:0.30,lead:0.40,tvpi:[2.5,3.6,4.5],bench:1.3},
+ {id:"f4",name:"Fund IV",yr:"2025",size:500,cos:60,chkLo:2,chkHi:8,chkAvg:4.5,reserve:0.40,lead:0.55,tvpi:[1.0,1.2,1.5],bench:1.1},
+];
+const FM=Object.fromEntries(FUNDS.map(f=>[f.id,f]));
+// check $M, entry & current valuation $M, ret = ownership retained after dilution
+const TOP=[
+ {co:"xAI → SpaceX",sec:"Frontier AI / space",f:"f3",entry:"Nov 2023 · formation round",chk:45,ev:18000,cv:350000,ret:0.67,conf:"Medium",status:"Public via SpaceX (IPO Jun 2026)"},
+ {co:"Cognition",sec:"AI coding agents",f:"f3",entry:"Mar 2024 · Series A",chk:1.5,ev:350,cv:48000,ret:0.60,conf:"Medium",status:"Private"},
+ {co:"Atoms",sec:"Robotics",f:"f2",entry:"~2021 · Seed",chk:1.5,ev:40,cv:6800,ret:0.45,conf:"Low",status:"Private"},
+ {co:"Rippling",sec:"HR / IT platform",f:"spv",entry:"2016 · Seed (scout / SPV)",chk:0.5,ev:30,cv:16800,ret:0.35,conf:"Medium",status:"Private"},
+ {co:"Polymarket",sec:"Prediction markets",f:"f3",entry:"2024 · Series B",chk:2,ev:350,cv:15000,ret:0.75,conf:"Medium",status:"Private"},
+ {co:"Clay",sec:"GTM data",f:"f1",entry:"~2019 · Seed",chk:0.75,ev:25,cv:3100,ret:0.45,conf:"Low",status:"Private"},
+ {co:"NewLimit",sec:"Longevity biotech",f:"f2",entry:"~2021 · Seed",chk:2,ev:100,cv:3100,ret:0.60,conf:"Low",status:"Private"},
+ {co:"Wise",sec:"Payments",f:"spv",entry:"~2016 · late private (SPV)",chk:0.5,ev:1100,cv:11000,ret:0.85,conf:"Medium",status:"Public (LSE 2021)"},
+ {co:"Ripple",sec:"Crypto payments",f:"spv",entry:"~2019 · secondary (SPV)",chk:1,ev:10000,cv:40000,ret:0.95,conf:"Low",status:"Private"},
+ {co:"Solana",sec:"L1 blockchain",f:"spv",entry:"May 2018 · seed token @ $0.04",chk:null,ev:0.04,cv:150,ret:1,conf:"Medium",status:"Liquid token",token:true},
+].map(d=>{d.mk=d.cv/d.ev*d.ret;d.val=d.chk!=null?d.chk*d.mk:null;const f=FM[d.f];d.mof=(d.val!=null&&f.size)?d.val/f.size:null;return d});
+
+const NS="http://www.w3.org/2000/svg";
+const col=id=>`var(--${id})`;
+function el(t,a={},p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function txt(p,x,y,s,a={}){const t=el("text",{x,y,...a},p);t.textContent=s;return t}
+function svg(id,w,h,label){const s=el("svg",{viewBox:`0 0 ${w} ${h}`,role:"img","aria-label":label});document.getElementById(id).appendChild(s);return s}
+const fmt$=m=>m==null?"n/d":m>=1000?`$${(m/1000).toFixed(m>=10000?0:1)}B`:m>=1?`$${m.toFixed(m<10?1:0)}M`:`$${Math.round(m*1000)}K`;
+const fmtX=x=>x==null?"n/d":x>=100?`${Math.round(x).toLocaleString()}x`:x>=10?`${x.toFixed(0)}x`:`${x.toFixed(1)}x`;
+
+// tooltip
+const tip=document.getElementById("tip");
+function hook(node,html,group){
+  node.classList.add("hit");node.setAttribute("tabindex","0");
+  const show=e=>{tip.innerHTML=html;tip.hidden=false;move(e);if(group){group.classList.add("dim");node.closest("g.row")?.querySelectorAll(".bar").forEach(b=>b.classList.add("on"))}};
+  const move=e=>{const r=node.getBoundingClientRect();const x=e&&e.clientX!=null?e.clientX:r.left+r.width/2;const y=e&&e.clientY!=null?e.clientY:r.top;
+    const tw=tip.offsetWidth,th=tip.offsetHeight;tip.style.left=Math.min(window.innerWidth-tw-8,Math.max(8,x+12))+"px";tip.style.top=Math.max(8,y-th-12)+"px"};
+  const hide=()=>{tip.hidden=true;if(group){group.classList.remove("dim");group.querySelectorAll(".on").forEach(b=>b.classList.remove("on"))}};
+  node.addEventListener("pointerenter",show);node.addEventListener("pointermove",move);node.addEventListener("pointerleave",hide);
+  node.addEventListener("focus",()=>show());node.addEventListener("blur",hide);
+}
+function grid(s,x0,x1,y,ticks,sc,fmt){ticks.forEach(t=>{const x=sc(t);el("line",{x1:x,x2:x,y1:y[0],y2:y[1],stroke:"var(--grid)","stroke-width":1},s);txt(s,x,y[1]+16,fmt(t),{class:"ax","text-anchor":"middle"})})}
+
+// 01 fund sizes (vertical bars)
+(()=>{const W=900,H=330,L=56,R=20,T=24,B=58;const s=svg("c-funds",W,H,"Fund sizes: Fund I $100M 2018, Fund II $270M 2021, Fund III $300M 2023, Fund IV $500M 2025, reported but unconfirmed $800M fund");
+ const items=[{id:"spv",lab:"SPVs",yr:"2016–18",v:null},{id:"f1",lab:"Fund I",yr:"2018",v:100},{id:"f2",lab:"Fund II",yr:"2021",v:270},{id:"f3",lab:"Fund III",yr:"2023",v:300},{id:"f4",lab:"Fund IV",yr:"2025",v:500},{id:"f5",lab:"Fund V?",yr:"2026",v:800,rumor:true}];
+ const max=900,sy=v=>T+(H-T-B)*(1-v/max),bw=(W-L-R)/items.length;
+ [0,200,400,600,800].forEach(t=>{el("line",{x1:L,x2:W-R,y1:sy(t),y2:sy(t),stroke:"var(--grid)"},s);txt(s,L-8,sy(t)+4,`$${t}M`,{class:"ax","text-anchor":"end"})});
+ const g=el("g",{},s);
+ items.forEach((d,i)=>{const cx=L+bw*i+bw/2,w=Math.min(72,bw*.56);
+  if(d.v==null){txt(g,cx,sy(110),"~40 deal",{"text-anchor":"middle","font-size":12});txt(g,cx,sy(110)+15,"SPVs",{"text-anchor":"middle","font-size":12});
+   const r=el("rect",{x:cx-w/2,y:sy(8),width:w,height:sy(0)-sy(8),rx:2,fill:col("spv")},g);hook(r,"<b>SPV era 2016–18</b><br>Each deal its own SPV. Form D raises $58K–$433K. SPVs have returned ~$100M to investors.");}
+  else{const y=sy(d.v),h=sy(0)-y;const r=el("path",{d:`M${cx-w/2},${sy(0)} V${y+4} q0,-4 4,-4 H${cx+w/2-4} q4,0 4,4 V${sy(0)} Z`,fill:d.rumor?"none":col(d.id),stroke:d.rumor?"var(--muted)":"none","stroke-dasharray":d.rumor?"5 4":"","stroke-width":d.rumor?1.5:0,class:"bar"},g);
+   txt(g,cx,y-8,`$${d.v}M`,{"text-anchor":"middle",class:"num","font-size":14,"font-weight":600});
+   hook(r,d.rumor?"<b>Reported $800M fund</b><br>One secondary source. Not confirmed by press release or Form D.":`<b>${d.lab} · ${d.yr}</b><br>$${d.v}M committed (reported)`);}
+  txt(s,cx,H-B+20,d.lab,{"text-anchor":"middle","font-size":13,"font-weight":500,style:"fill:var(--ink)"});txt(s,cx,H-B+36,d.yr,{"text-anchor":"middle",class:"ax"});
+ });
+ el("line",{x1:L,x2:W-R,y1:sy(0),y2:sy(0),stroke:"var(--muted)"},s);
+})();
+
+// 02a TVPI ranges
+(()=>{const fs=FUNDS.filter(f=>f.tvpi);const W=480,rowH=58,T=10,L=78,R=24,B=34,H=T+rowH*fs.length+B;const s=svg("c-tvpi",W,H,"Modeled gross TVPI: Fund I 2.4x, Fund II 1.4x, Fund III 3.6x, Fund IV 1.2x base case");
+ const sx=v=>L+(W-L-R)*v/5;grid(s,L,W-R,[T,H-B+4],[0,1,2,3,4,5],sx,t=>t+"x");
+ el("line",{x1:sx(1),x2:sx(1),y1:T,y2:H-B+4,stroke:"var(--muted)","stroke-dasharray":"3 3"},s);
+ const g=el("g",{},s);
+ fs.forEach((f,i)=>{const y=T+rowH*i+rowH/2;const [lo,b,hi]=f.tvpi;
+  txt(s,L-10,y-2,f.name,{"text-anchor":"end","font-size":13,"font-weight":500,style:"fill:var(--ink)"});txt(s,L-10,y+13,f.yr,{"text-anchor":"end",class:"ax"});
+  const r=el("rect",{x:sx(lo),y:y-7,width:sx(hi)-sx(lo),height:14,rx:4,fill:col(f.id),opacity:.35,class:"bar"},g);
+  el("line",{x1:sx(f.bench),x2:sx(f.bench),y1:y-13,y2:y+13,stroke:"var(--ink)","stroke-width":2},g);
+  const c=el("circle",{cx:sx(b),cy:y,r:7,fill:col(f.id),stroke:"var(--surface)","stroke-width":2},g);
+  txt(g,sx(hi)+8,y+4,`${b.toFixed(1)}x`,{class:"num","font-size":13,"font-weight":600});
+  const h=`<b>${f.name} · ${f.yr}</b><br>Bear ${lo}x · Base ${b}x · Bull ${hi}x<br>Top-quartile benchmark ≈ ${f.bench}x`;hook(r,h);hook(c,h);
+ });
+ txt(s,sx(1)+4,T+8,"1.0x",{class:"ax"});
+ const ly=H-6;el("line",{x1:L,x2:L,y1:ly-10,y2:ly+2,stroke:"var(--ink)","stroke-width":2},s);txt(s,L+6,ly,"top-quartile benchmark",{class:"ax"});
+ el("circle",{cx:L+168,cy:ly-4,r:5,fill:"var(--muted)"},s);txt(s,L+177,ly,"base case",{class:"ax"});
+})();
+
+// 02b value by fund (horizontal)
+(()=>{const fs=FUNDS.filter(f=>f.tvpi);const W=480,rowH=58,T=10,L=78,R=70,B=34,H=T+rowH*fs.length+B;const s=svg("c-value",W,H,"Modeled base-case value: Fund I $240M, Fund II $378M, Fund III $1.08B, Fund IV $600M");
+ const sx=v=>L+(W-L-R)*v/1200;grid(s,L,W-R,[T,H-B+4],[0,300,600,900,1200],sx,t=>t?`$${t>=1000?(t/1000).toFixed(1)+"B":t+"M"}`:"0");
+ const g=el("g",{},s);
+ fs.forEach((f,i)=>{const y=T+rowH*i+rowH/2;const v=f.size*f.tvpi[1];
+  txt(s,L-10,y-2,f.name,{"text-anchor":"end","font-size":13,"font-weight":500,style:"fill:var(--ink)"});txt(s,L-10,y+13,`$${f.size}M fund`,{"text-anchor":"end",class:"ax"});
+  // committed (ghost) + value
+  el("rect",{x:L,y:y-12,width:sx(f.size)-L,height:24,rx:4,fill:"none",stroke:"var(--muted)","stroke-dasharray":"3 3"},g);
+  const r=el("rect",{x:L,y:y-8,width:Math.max(2,sx(v)-L),height:16,rx:4,fill:col(f.id),class:"bar"},g);
+  txt(g,sx(Math.max(v,f.size))+8,y+4,fmt$(v),{class:"num","font-size":13,"font-weight":600});
+  hook(r,`<b>${f.name}</b><br>Committed $${f.size}M · modeled value ${fmt$(v)} (${f.tvpi[1]}x)`);
+ });
+ const ly=H-6;el("rect",{x:L,y:ly-10,width:18,height:10,fill:"none",stroke:"var(--muted)","stroke-dasharray":"3 3"},s);txt(s,L+24,ly,"committed capital",{class:"ax"});
+})();
+
+// 03a check ranges
+(()=>{const W=480,rowH=50,T=10,L=78,R=40,B=34,H=T+rowH*FUNDS.length+B;const s=svg("c-checks",W,H,"Modeled initial check ranges rise from $60K–$450K in the SPV era to $2M–$8M in Fund IV");
+ const sx=v=>L+(W-L-R)*v/10;grid(s,L,W-R,[T,H-B+4],[0,2,4,6,8,10],sx,t=>`$${t}M`);
+ const g=el("g",{},s);
+ FUNDS.forEach((f,i)=>{const y=T+rowH*i+rowH/2;
+  txt(s,L-10,y-2,f.name,{"text-anchor":"end","font-size":13,"font-weight":500,style:"fill:var(--ink)"});txt(s,L-10,y+13,f.yr,{"text-anchor":"end",class:"ax"});
+  const r=el("rect",{x:sx(f.chkLo),y:y-6,width:Math.max(4,sx(f.chkHi)-sx(f.chkLo)),height:12,rx:4,fill:col(f.id),opacity:.4,class:"bar"},g);
+  const c=el("circle",{cx:sx(f.chkAvg),cy:y,r:6,fill:col(f.id),stroke:"var(--surface)","stroke-width":2},g);
+  txt(g,sx(f.chkHi)+8,y+4,`avg ${fmt$(f.chkAvg)}`,{class:"num","font-size":12});
+  const h=`<b>${f.name}</b><br>Initial checks ${fmt$(f.chkLo)}–${fmt$(f.chkHi)}, avg ${fmt$(f.chkAvg)} (model)<br>~${f.cos} companies · ${Math.round(f.reserve*100)}% reserves`;hook(r,h);hook(c,h);
+  if(f.id==="f3"){txt(g,W-R+2,y-12,"xAI ~$45M →",{"text-anchor":"end","font-size":11,style:"fill:var(--ink)","font-weight":600})}
+ });
+})();
+
+// 03b lead vs follow (100% stacked)
+(()=>{const W=480,rowH=50,T=10,L=78,R=16,B=34,H=T+rowH*FUNDS.length+B;const s=svg("c-lead",W,H,"Modeled lead share rises from about 3% in SPVs to 55% in Fund IV");
+ const sx=v=>L+(W-L-R)*v;grid(s,L,W-R,[T,H-B+4],[0,.25,.5,.75,1],sx,t=>`${t*100}%`);
+ const g=el("g",{},s);
+ FUNDS.forEach((f,i)=>{const y=T+rowH*i+rowH/2;
+  txt(s,L-10,y-2,f.name,{"text-anchor":"end","font-size":13,"font-weight":500,style:"fill:var(--ink)"});txt(s,L-10,y+13,f.yr,{"text-anchor":"end",class:"ax"});
+  const a=el("rect",{x:L,y:y-9,width:Math.max(2,sx(f.lead)-L-1),height:18,rx:3,fill:col(f.id),class:"bar"},g);
+  const b=el("rect",{x:sx(f.lead)+1,y:y-9,width:sx(1)-sx(f.lead)-1,height:18,rx:3,fill:"var(--grid)",class:"bar"},g);
+  txt(g,sx(f.lead)+6,y+4,`${Math.round(f.lead*100)}% led`,{class:"num","font-size":12});
+  const h=`<b>${f.name}</b><br>Led or co-led ~${Math.round(f.lead*100)}% · followed ~${100-Math.round(f.lead*100)}% (model)`;hook(a,h);hook(b,h);
+ });
+ const x51=sx(.51);el("line",{x1:x51,x2:x51,y1:T,y2:H-B+4,stroke:"var(--ink)","stroke-width":1.5,"stroke-dasharray":"4 3"},s);
+ txt(s,x51+4,H-B-2,"Crunchbase all-time 51%",{class:"ax",style:"fill:var(--ink)"});
+})();
+
+// fund construction table
+(()=>{const t=document.getElementById("t-funds");
+ t.innerHTML=`<thead><tr><th>Fund</th><th>Vintage</th><th class="n">Size</th><th class="n">Companies</th><th class="n">Initial check</th><th class="n">Reserves</th><th class="n">Led</th><th class="n">TVPI bear / base / bull</th><th>Anchor evidence</th></tr></thead><tbody>`+
+ FUNDS.map(f=>`<tr><td><span class="fund-pill"><i class="sw" style="background:${col(f.id)}"></i>${f.name}</span></td><td>${f.yr}</td><td class="n">${f.size?"$"+f.size+"M":"SPVs"}</td><td class="n">~${f.cos}</td><td class="n">${fmt$(f.chkLo)}–${fmt$(f.chkHi)}</td><td class="n">${Math.round(f.reserve*100)}%</td><td class="n">~${Math.round(f.lead*100)}%</td><td class="n">${f.tvpi?f.tvpi.map(x=>x.toFixed(1)+"x").join(" / "):"~$100M returned"}</td><td style="font-size:13px;color:var(--ink-2)">${{
+  spv:"Form D raises $58K–$433K; TechCrunch 2017: SPV per deal, $250–750K checks; Rippling, Wise, Solana era",
+  f1:"$100M (Colossus/Seedlist); CB Insights shows a $28M first close (AVF I)",
+  f2:"$270M; peak-valuation 2021 vintage; NewLimit, Atoms",
+  f3:"$300M; ~15% into xAI; Cognition, Polymarket; 59% annualized over 3 years ≈ 4.0x",
+  f4:"$500M, \"oversubscribed before we started\"; led Applied Labs $4.2M, Era $11M, Blackstar $12M seeds"}[f.id]}</td></tr>`).join("")+"</tbody>";
+})();
+
+// 04a markup (log)
+const tops=TOP.slice().sort((a,b)=>(b.val??-1)-(a.val??-1));
+(()=>{const d=TOP.slice().sort((a,b)=>b.mk-a.mk);const W=480,rowH=34,T=8,L=112,R=60,B=30,H=T+rowH*d.length+B;
+ const s=svg("c-markup",W,H,"Modeled gross markup, log scale. Solana about 3750x, Rippling about 196x, Cognition about 82x, Atoms 76x, Clay 56x, Polymarket 32x, NewLimit 19x, xAI 13x, Wise 8.5x, Ripple 3.8x");
+ const lmax=4,sx=v=>L+(W-L-R)*Math.log10(Math.max(v,1))/lmax;grid(s,L,W-R,[T,H-B+4],[1,10,100,1000,10000],sx,t=>t>=1000?(t/1000)+"Kx":t+"x");
+ const g=el("g",{},s);
+ d.forEach((p,i)=>{const y=T+rowH*i+rowH/2;txt(s,L-8,y+4,p.co,{"text-anchor":"end","font-size":12.5,style:"fill:var(--ink)"});
+  const r=el("rect",{x:L,y:y-7,width:Math.max(3,sx(p.mk)-L),height:14,rx:4,fill:col(p.f),class:"bar"},g);
+  txt(g,sx(p.mk)+6,y+4,fmtX(p.mk),{class:"num","font-size":12});
+  hook(r,`<b>${p.co}</b> · ${FM[p.f].name}<br>${p.entry}<br>${p.token?"$0.04 → ~$150 per SOL":`Entry ${fmt$(p.ev)} → now ${fmt$(p.cv)}, ${Math.round(p.ret*100)}% ownership kept`}<br>Gross markup ≈ ${fmtX(p.mk)}`);
+ });
+})();
+
+// 04b multiple of fund
+(()=>{const d=TOP.filter(p=>p.mof!=null).sort((a,b)=>b.mof-a.mof);const W=480,rowH=40,T=8,L=112,R=60,B=30,H=T+rowH*d.length+B;
+ const s=svg("c-mof",W,H,"Position value as a multiple of its fund: xAI 1.95x Fund III; all others below 0.5x");
+ const sx=v=>L+(W-L-R)*v/2.2;grid(s,L,W-R,[T,H-B+4],[0,.5,1,1.5,2],sx,t=>t+"x");
+ el("line",{x1:sx(1),x2:sx(1),y1:T,y2:H-B+4,stroke:"var(--ink)","stroke-width":1.5,"stroke-dasharray":"4 3"},s);
+ txt(s,sx(1)+4,H-B-2,"returns the fund",{class:"ax",style:"fill:var(--ink)"});
+ const g=el("g",{},s);
+ d.forEach((p,i)=>{const y=T+rowH*i+rowH/2;txt(s,L-8,y,p.co,{"text-anchor":"end","font-size":12.5,style:"fill:var(--ink)"});txt(s,L-8,y+13,FM[p.f].name,{"text-anchor":"end",class:"ax"});
+  const r=el("rect",{x:L,y:y-8,width:Math.max(3,sx(p.mof)-L),height:16,rx:4,fill:col(p.f),class:"bar"},g);
+  txt(g,sx(p.mof)+6,y+4,`${p.mof.toFixed(2)}x`,{class:"num","font-size":12,"font-weight":p.mof>=1?600:400});
+  hook(r,`<b>${p.co}</b><br>${fmt$(p.chk)} check × ${fmtX(p.mk)} = ${fmt$(p.val)}<br>÷ $${FM[p.f].size}M ${FM[p.f].name} = ${p.mof.toFixed(2)}x of fund`);
+ });
+})();
+
+// top-10 table
+(()=>{const t=document.getElementById("t-top");
+ t.innerHTML=`<thead><tr><th>#</th><th>Company</th><th>Fund</th><th>Entry</th><th class="n">Check</th><th class="n">Entry val.</th><th class="n">Current val.</th><th class="n">Markup</th><th class="n">Value now</th><th class="n">× fund</th><th>Status</th><th>Confidence</th></tr></thead><tbody>`+
+ tops.map((p,i)=>`<tr><td class="n">${i+1}</td><td class="co">${p.co}<small>${p.sec}</small></td><td><span class="fund-pill"><i class="sw" style="background:${col(p.f)}"></i>${FM[p.f].name}</span></td><td style="font-size:13px">${p.entry}</td>
+ <td class="n">${p.chk==null?"undisclosed":fmt$(p.chk)}</td><td class="n">${p.token?"$0.04/SOL":fmt$(p.ev)}</td><td class="n">${p.token?"~$150/SOL":fmt$(p.cv)}</td><td class="n">${fmtX(p.mk)}</td><td class="n">${fmt$(p.val)}</td>
+ <td class="n">${p.mof!=null?p.mof.toFixed(2)+"x":(p.f==="spv"?"SPV":"n/d")}</td><td style="font-size:13px">${p.status}</td><td><span class="conf">${p.conf}</span></td></tr>`).join("")+"</tbody>";
+})();
+</script>
