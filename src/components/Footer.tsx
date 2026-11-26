@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function Footer() {
   return (
     <footer className="relative z-10 border-t border-sgv-mirage py-12 px-6 md:px-12 lg:px-20">
@@ -23,9 +25,19 @@ export default function Footer() {
           </a>
         </div>
 
-        <span className="text-xs text-sgv-grey/50 font-sans">
-          &copy; {new Date().getFullYear()} Social Graph Ventures. All rights reserved.
-        </span>
+        <div className="flex flex-col items-center md:items-end gap-1">
+          <span className="text-xs text-sgv-grey/50 font-sans">
+            &copy; {new Date().getFullYear()} Social Graph Ventures. All rights reserved.
+          </span>
+          <div className="flex items-center gap-3 text-[11px] text-sgv-grey/40 font-sans">
+            <Link to="/privacy" className="hover:text-sgv-grey transition-colors">
+              Privacy
+            </Link>
+            <Link to="/terms" className="hover:text-sgv-grey transition-colors">
+              Terms
+            </Link>
+          </div>
+        </div>
       </div>
     </footer>
   );
